@@ -30,13 +30,13 @@ window.SITE = {
   ],
   "projects": [
     {
-      "title": "Settings",
-      "category": "Anime",
+      "title": "Menu",
+      "category": "RPG",
       "type": "Game UI",
       "description": "",
-      "cover": "works/new-project-mw2hhjapv07.webp",
+      "cover": "works/new-project-mw2hjt58jed.png",
       "images": [
-        "works/new-project-mw2hhjapv07.webp"
+        "works/new-project-mw2hjt58jed.png"
       ]
     },
     {
@@ -47,6 +47,16 @@ window.SITE = {
       "cover": "works/inventory-mw2e4dlpian.webp",
       "images": [
         "works/inventory-mw2e4dlpian.webp"
+      ]
+    },
+    {
+      "title": "Settings",
+      "category": "Anime",
+      "type": "Game UI",
+      "description": "",
+      "cover": "works/new-project-mw2hhjapv07.webp",
+      "images": [
+        "works/new-project-mw2hhjapv07.webp"
       ]
     },
     {
