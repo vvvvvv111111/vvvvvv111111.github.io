@@ -30,6 +30,16 @@ window.SITE = {
   ],
   "projects": [
     {
+      "title": "Settings",
+      "category": "Anime",
+      "type": "Game UI",
+      "description": "",
+      "cover": "works/new-project-mw2hhjapv07.webp",
+      "images": [
+        "works/new-project-mw2hhjapv07.webp"
+      ]
+    },
+    {
       "title": "Inventory",
       "category": "Anime",
       "type": "Game UI",
