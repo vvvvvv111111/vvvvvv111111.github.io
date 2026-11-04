@@ -30,13 +30,23 @@ window.SITE = {
   ],
   "projects": [
     {
+      "title": "Inventory",
+      "category": "Anime",
+      "type": "Game UI",
+      "description": "",
+      "cover": "works/inventory-mw2dz98gb4c.webp",
+      "images": [
+        "works/inventory-mw2dz98gb4c.webp"
+      ]
+    },
+    {
       "title": "Quiz interface",
       "category": "Cartoon",
       "type": "Game UI",
       "description": "",
-      "cover": "works/quiz-interface.jpg",
+      "cover": "works/quiz-interface-mw2e073rqq2.webp",
       "images": [
-        "works/quiz-interface.jpg"
+        "works/quiz-interface-mw2e073rqq2.webp"
       ]
     }
   ]
