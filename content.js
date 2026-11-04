@@ -34,9 +34,9 @@ window.SITE = {
       "category": "Anime",
       "type": "Game UI",
       "description": "",
-      "cover": "works/inventory-mw2dz98gb4c.webp",
+      "cover": "works/inventory-mw2e4dlpian.webp",
       "images": [
-        "works/inventory-mw2dz98gb4c.webp"
+        "works/inventory-mw2e4dlpian.webp"
       ]
     },
     {
@@ -44,9 +44,9 @@ window.SITE = {
       "category": "Cartoon",
       "type": "Game UI",
       "description": "",
-      "cover": "works/quiz-interface-mw2e073rqq2.webp",
+      "cover": "works/quiz-interface-mw2e4ix1uib.webp",
       "images": [
-        "works/quiz-interface-mw2e073rqq2.webp"
+        "works/quiz-interface-mw2e4ix1uib.webp"
       ]
     }
   ]
