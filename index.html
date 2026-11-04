@@ -245,16 +245,18 @@
   .owner-btn svg { width: 15px; height: 15px; }
 
   /* lightbox */
-  .lb { position: fixed; inset: 0; z-index: 50; display: grid; grid-template-rows: auto 1fr auto; background: rgba(0,0,0,.86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); opacity: 0; visibility: hidden; transition: opacity .45s var(--ease), visibility .45s; }
+  .lb { position: fixed; inset: 0; z-index: 50; display: grid; grid-template-rows: auto 1fr auto; background: rgba(4,4,4,.96); opacity: 0; visibility: hidden; transition: opacity .45s var(--ease), visibility .45s; }
   .lb.open { opacity: 1; visibility: visible; }
   .lb-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 26px 40px; }
   .lb-head small { color: var(--muted); letter-spacing: .1em; text-transform: uppercase; font-size: 14px; }
   .lb-head h3 { margin-top: 8px; font-size: 26px; font-weight: 400; letter-spacing: -.02em; }
   .lb-close { width: 46px; height: 46px; flex: none; border-radius: 50%; border: 1px solid var(--border); font-size: 22px; transition: background .3s, color .3s, transform .4s var(--ease); }
   .lb-close:hover { background: #f2f2f2; color: #111; transform: rotate(90deg); }
-  .lb-stage { position: relative; display: grid; place-items: center; min-height: 0; padding: 0 90px; }
-  .lb-stage img { max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.6); transform: scale(.96); opacity: 0; transition: transform .6s var(--ease), opacity .6s var(--ease); }
-  .lb.open .lb-stage img.ready { transform: none; opacity: 1; }
+  .lb-stage { position: relative; min-height: 0; overflow: hidden; }
+  /* the image always fits inside the space between header and footer, whatever its size */
+  .lb-fit { position: absolute; inset: 8px 96px 8px; display: flex; align-items: center; justify-content: center; }
+  .lb-fit img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.6); transform: scale(.96); opacity: 0; transition: transform .6s var(--ease), opacity .6s var(--ease); }
+  .lb.open .lb-fit img.ready { transform: none; opacity: 1; }
   .lb-nav { position: absolute; top: 50%; translate: 0 -50%; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border); background: rgba(15,15,15,.8); font-size: 20px; transition: background .3s, color .3s; }
   .lb-nav:hover { background: #f2f2f2; color: #111; }
   .lb-prev { left: 24px; } .lb-next { right: 24px; }
@@ -287,8 +289,8 @@
     .discord { width: auto; flex: 1; padding: 22px; }
     footer { flex-direction: column; text-align: center; }
     .lb-head, .lb-foot { padding-left: 16px; padding-right: 16px; }
-    .lb-stage { padding: 0 16px; }
-    .lb-nav { top: auto; bottom: -70px; translate: none; }
+    .lb-fit { inset: 4px 16px 72px; }
+    .lb-nav { top: auto; bottom: 10px; translate: none; }
     .lb-prev { left: auto; right: 84px; } .lb-next { right: 16px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -385,7 +387,7 @@
     <button class="lb-close" id="lbClose" aria-label="Close">×</button>
   </div>
   <div class="lb-stage">
-    <img id="lbImg" alt="">
+    <div class="lb-fit"><img id="lbImg" alt=""></div>
     <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous image">←</button>
     <button class="lb-nav lb-next" id="lbNext" aria-label="Next image">→</button>
   </div>
@@ -606,7 +608,7 @@
   $('lbClose').onclick = closeLb;
   $('lbPrev').onclick = () => { curImg--; showImg(); };
   $('lbNext').onclick = () => { curImg++; showImg(); };
-  lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('lb-stage')) closeLb(); });
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('lb-stage') || e.target.classList.contains('lb-fit')) closeLb(); });
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('open')) return;
     if (e.key === 'Escape') closeLb();
