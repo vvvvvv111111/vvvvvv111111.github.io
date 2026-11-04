@@ -54,62 +54,71 @@
   .hero { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; padding: 0 70px 40px; }
   .hero-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 90px; padding-top: 60px; }
   .logo { display: flex; font-size: clamp(40px, 7.4vw, 140px); font-weight: 500; letter-spacing: -.02em; line-height: 1; user-select: none; white-space: nowrap; }
+  .logo { cursor: default; }
   .logo span {
-    display: inline-block; color: var(--c);
+    position: relative; display: inline-block; color: var(--c);
     opacity: 0; filter: blur(16px); transform: translateY(30px) scaleY(1.4);
-    animation: letterIn 1.1s var(--ease) forwards, glint 6s ease-in-out infinite;
-    animation-delay: calc(var(--i) * 55ms + 150ms), calc(var(--i) * 70ms + 2.2s);
-    transition: translate .6s var(--ease-out);
+    animation: letterIn 1.1s var(--ease) forwards;
+    animation-delay: calc(var(--i) * 55ms + 150ms);
+    will-change: translate, scale;
   }
-  .logo span:hover { translate: 0 -10px; }
-  .logo.static span { animation: glint 6s ease-in-out infinite; animation-delay: calc(var(--i) * 70ms); opacity: 1; filter: none; transform: none; }
+  /* soft glint passing through the letters: a white copy fades in and out (opacity only = smooth) */
+  .logo span::after {
+    content: attr(data-ch); position: absolute; inset: 0; color: #fff;
+    text-shadow: 0 0 22px rgba(255,255,255,.5);
+    opacity: 0; animation: glint 6s ease-in-out infinite; animation-delay: calc(var(--i) * 70ms + 2.2s);
+  }
+  .logo.static span { animation: none; opacity: 1; filter: none; transform: none; }
   @keyframes letterIn { to { opacity: 1; filter: blur(0); transform: none; } }
-  @keyframes glint { 0%, 12%, 100% { text-shadow: none; color: var(--c); } 6% { color: #fff; text-shadow: 0 0 24px rgba(255,255,255,.55); } }
+  @keyframes glint { 0%, 14%, 100% { opacity: 0; } 7% { opacity: 1; } }
 
   /* nav buttons: fill grows from the cursor, label rolls, arrow flies through, fill fades slowly on leave */
   .nav { display: grid; grid-template-columns: repeat(4, minmax(0, 268px)); gap: 18px; }
+  /* Every hover effect animates only transform/opacity, so the GPU composites it at full frame rate. */
   .nav a {
     position: relative; overflow: hidden; isolation: isolate;
     display: flex; align-items: center; gap: 14px;
     height: 86px; padding: 0 24px;
     border: 1px solid var(--border); border-radius: 6px;
-    background: linear-gradient(135deg, rgba(44,44,44,.6), rgba(8,8,8,.82));
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    background: linear-gradient(135deg, rgba(36,36,36,.92), rgba(10,10,10,.96));
     font-size: 20px;
     opacity: 0; animation: rise 1s var(--ease) forwards; animation-delay: calc(var(--i) * 90ms + 1s);
-    transition: color .9s var(--ease), border-color .9s var(--ease), box-shadow .9s var(--ease), translate .6s var(--ease-out), scale .3s var(--ease);
+    transition: color .8s var(--ease), border-color .8s var(--ease), scale .35s var(--ease-out);
+    will-change: translate;
+    -webkit-tap-highlight-color: transparent;
   }
+  /* light fill: a big soft disc centred where the cursor entered, scaled up from 0 */
   .nav a::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
-    background: radial-gradient(circle at var(--fx, 50%) var(--fy, 50%), #fbfbfb 0%, #dcdcdc 40%, #a8a8a8 100%);
-    clip-path: circle(0% at var(--fx, 50%) var(--fy, 50%));
-    opacity: 0;
-    transition: clip-path 1s var(--ease-out), opacity 1s var(--ease);
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    left: var(--fx, 50%); top: var(--fy, 50%); width: 260%; aspect-ratio: 1; margin: -130% 0 0 -130%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #e6e6e6 32%, #bdbdbd 62%, #9c9c9c 72%);
+    transform: scale(0); opacity: 0;
+    transition: transform .9s var(--ease-out), opacity .9s var(--ease);
+    will-change: transform, opacity;
   }
+  /* sheen sweep */
   .nav a::after {
     content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 48%, transparent 66%);
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.6) 48%, transparent 66%);
     transform: translateX(-120%); opacity: 0;
   }
-  .nav .num { font-size: 13px; color: var(--muted); letter-spacing: .06em; transition: color .9s var(--ease); }
+  .nav .num { font-size: 13px; color: var(--muted); letter-spacing: .06em; transition: color .8s var(--ease); }
   .nav .label { flex: 1; display: block; height: 1.2em; line-height: 1.2em; overflow: hidden; }
-  .nav .label span { display: block; transition: transform .6s var(--ease-out); }
+  .nav .label span { display: block; transition: transform .65s var(--ease-out); will-change: transform; }
+  .nav .label span + span { transition-delay: .03s; }
   .nav .arr { position: relative; width: 14px; height: 14px; overflow: hidden; flex: none; }
-  .nav .arr .arrow { position: absolute; inset: 0; transition: transform .6s var(--ease-out); }
-  .nav .arr .arrow + .arrow { transform: translate(-130%, 130%); }
-  .nav a:hover, .nav a:focus-visible {
-    color: #111; border-color: rgba(255,255,255,.6);
-    box-shadow: 0 18px 50px -18px rgba(255,255,255,.35);
-    transition: color .35s var(--ease), border-color .35s, box-shadow .5s var(--ease), translate .6s var(--ease-out), scale .3s var(--ease);
-  }
-  .nav a:hover::before, .nav a:focus-visible::before { clip-path: circle(150% at var(--fx, 50%) var(--fy, 50%)); opacity: 1; transition: clip-path .7s var(--ease-out), opacity .25s; }
-  .nav a:hover::after { animation: sheen 1s var(--ease) .15s; }
+  .nav .arr .arrow { position: absolute; inset: 0; transition: transform .65s var(--ease-out); will-change: transform; }
+  .nav .arr .arrow + .arrow { transform: translate(-130%, 130%); transition-delay: .06s; }
+  .nav a:hover, .nav a:focus-visible { color: #111; border-color: rgba(255,255,255,.55); transition: color .35s var(--ease), border-color .35s, scale .35s var(--ease-out); }
+  .nav a:hover::before, .nav a:focus-visible::before { transform: scale(1); opacity: 1; transition: transform .75s var(--ease-out), opacity .2s linear; }
+  .nav a:hover::after { animation: sheen 1.1s var(--ease) .2s; }
   .nav a:hover .num, .nav a:focus-visible .num { color: #6a6a6a; transition-duration: .35s; }
   .nav a:hover .label span, .nav a:focus-visible .label span { transform: translateY(-100%); }
   .nav a:hover .arr .arrow, .nav a:focus-visible .arr .arrow { transform: translate(130%, -130%); }
   .nav a:hover .arr .arrow + .arrow, .nav a:focus-visible .arr .arrow + .arrow { transform: none; }
   .nav a:active { scale: .97; }
-  @keyframes sheen { 0% { transform: translateX(-120%); opacity: .9; } 100% { transform: translateX(120%); opacity: 0; } }
+  @keyframes sheen { 0% { transform: translateX(-120%); opacity: 1; } 100% { transform: translateX(120%); opacity: 0; } }
   @keyframes rise { from { opacity: 0; transform: translateY(22px); filter: blur(8px); } to { opacity: 1; transform: none; filter: blur(0); } }
 
   .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; opacity: 0; animation: rise 1.1s var(--ease) 1.5s forwards; }
@@ -144,7 +153,7 @@
     display: inline-flex; align-items: center; gap: 16px;
     height: 50px; padding: 0 22px;
     border: 1px solid var(--border); border-radius: 5px;
-    background: rgba(18,18,18,.7); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    background: rgba(16,16,16,.92);
     color: #bdbdbd; font-size: 18px;
     transition: background .35s var(--ease), color .35s, border-color .35s;
   }
@@ -171,7 +180,7 @@
     position: absolute; right: 16px; bottom: 14px;
     display: flex; align-items: center; gap: 10px;
     padding: 9px 14px; border-radius: 5px;
-    background: rgba(0,0,0,.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    background: rgba(0,0,0,.72);
     color: #e6e6e6; font-size: 15px;
     opacity: 0; transform: translateY(10px); transition: opacity .45s var(--ease), transform .45s var(--ease);
   }
@@ -193,7 +202,7 @@
   .currencies { display: flex; gap: 10px; margin-top: 50px; flex-wrap: wrap; }
   .currencies .chip { border-radius: 26px; font-size: 17px; }
   .services { display: grid; gap: 24px; margin-top: 46px; }
-  .price-card { border: 1px solid var(--border); border-radius: 16px; background: rgba(13,13,13,.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 40px 40px 26px; overflow: hidden; }
+  .price-card { border: 1px solid var(--border); border-radius: 16px; background: rgba(12,12,12,.94); padding: 40px 40px 26px; overflow: hidden; }
   .price-card::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(460px circle at var(--mx, 85%) var(--my, 0%), rgba(255,255,255,.07), transparent 60%); }
   .price-top { display: flex; justify-content: space-between; color: var(--dim); font-size: 15px; letter-spacing: .2em; }
   .price-card h3 { margin-top: 44px; font-size: 40px; font-weight: 400; letter-spacing: -.03em; }
@@ -440,6 +449,7 @@
       if (APP.rendered) logo.classList.add('static');
       [...logoText].forEach((ch, i, arr) => {
         const s = el('span', null, ch);
+        s.dataset.ch = ch;
         const k = arr.length > 1 ? i / (arr.length - 1) : 0;
         const v = Math.round(245 - k * 140);
         s.style.setProperty('--c', `rgb(${v},${v},${v})`);
@@ -616,21 +626,64 @@
     dcTimer = setTimeout(() => { btn.classList.remove('copied'); $('dcUser').textContent = APP.discordUser || ''; $('dcHint').textContent = 'Discord · click to copy'; }, 1800);
   });
 
-  /* ---------- nav buttons: fill origin + magnetic pull ---------- */
+  /* ---------- nav buttons: fill origin + magnetic pull (smoothed every frame) ---------- */
+  const magnets = [];
   document.querySelectorAll('.nav a').forEach(a => {
+    const st = { a, x: 0, y: 0, tx: 0, ty: 0, rect: null };
     const setOrigin = (e) => {
       const r = a.getBoundingClientRect();
       a.style.setProperty('--fx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
       a.style.setProperty('--fy', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
     };
-    a.addEventListener('pointerenter', setOrigin);
-    a.addEventListener('pointerleave', e => { setOrigin(e); a.style.translate = '0 0'; });
+    a.addEventListener('pointerenter', e => { setOrigin(e); st.rect = a.getBoundingClientRect(); });
+    a.addEventListener('pointerleave', e => { setOrigin(e); st.tx = 0; st.ty = 0; st.rect = null; });
     if (fine && !reduce) a.addEventListener('pointermove', e => {
-      const r = a.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      a.style.translate = `${(x * 8).toFixed(1)}px ${(y * 6 - 3).toFixed(1)}px`;
+      const r = st.rect || a.getBoundingClientRect();
+      st.tx = ((e.clientX - r.left) / r.width - .5) * 10;
+      st.ty = ((e.clientY - r.top) / r.height - .5) * 8 - 2;
     });
+    magnets.push(st);
   });
+
+  /* ---------- logo: letters rise in a smooth wave that follows the cursor ---------- */
+  const logoEl = $('logo');
+  const wave = { x: -1e4, active: false, letters: [], rects: null };
+  if (fine && !reduce) {
+    const hero = document.querySelector('.hero-center');
+    hero.addEventListener('pointermove', e => {
+      const r = logoEl.getBoundingClientRect();
+      wave.x = e.clientX;
+      wave.active = e.clientY > r.top - 140 && e.clientY < r.bottom + 60;
+    });
+    hero.addEventListener('pointerleave', () => { wave.active = false; });
+  }
+
+  let lastAnim = performance.now();
+  function animate(now) {
+    const dt = Math.min(.05, (now - lastAnim) / 1000); lastAnim = now;
+    const k = 1 - Math.exp(-dt * 12);
+    for (const m of magnets) {
+      const nx = m.x + (m.tx - m.x) * k, ny = m.y + (m.ty - m.y) * k;
+      if (Math.abs(nx - m.x) > .01 || Math.abs(ny - m.y) > .01) { m.x = nx; m.y = ny; m.a.style.translate = `${m.x.toFixed(2)}px ${m.y.toFixed(2)}px`; }
+    }
+    const spans = logoEl.children;
+    if (wave.letters.length !== spans.length) wave.letters = [...spans].map(s => ({ s, y: 0, c: 0 }));
+    const kw = 1 - Math.exp(-dt * 9);
+    for (const L of wave.letters) {
+      if (wave.active && !L.c) { const r = L.s.getBoundingClientRect(); L.c = r.left + r.width / 2; }
+      const d = wave.active ? (wave.x - L.c) / 90 : 99;
+      const target = Math.exp(-d * d) ;                       // 0..1, gaussian around the cursor
+      const ny = L.y + (target - L.y) * kw;
+      if (Math.abs(ny - L.y) > .0005) {
+        L.y = ny;
+        L.s.style.translate = `0 ${(-14 * L.y).toFixed(2)}px`;
+        L.s.style.scale = (1 + .06 * L.y).toFixed(4);
+      }
+    }
+    if (!wave.active) wave.letters.forEach(L => L.c = 0);   // re-measure next time (layout may change)
+    requestAnimationFrame(animate);
+  }
+  if (fine && !reduce) requestAnimationFrame(animate);
 
   /* ---------- spotlight + pointer ---------- */
   const pointer = { x: -9999, y: -9999, active: false };
@@ -653,7 +706,7 @@
   let W = 0, H = 0, t = 0, sy = 0, last = performance.now();
   const m = { x: 0, y: 0, s: 0 };
   function resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
     W = innerWidth; H = innerHeight;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
