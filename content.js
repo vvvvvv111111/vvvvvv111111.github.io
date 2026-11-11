@@ -30,6 +30,16 @@ window.SITE = {
   ],
   "projects": [
     {
+      "title": "Full Game",
+      "category": "Cartoon",
+      "type": "Game UI",
+      "description": "",
+      "cover": "works/new-project-mwceo0a7eia.webp",
+      "images": [
+        "works/new-project-mwceo0a7eia.webp"
+      ]
+    },
+    {
       "title": "Menu",
       "category": "RPG",
       "type": "Game UI",
