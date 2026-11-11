@@ -34,9 +34,9 @@ window.SITE = {
       "category": "RPG",
       "type": "Game UI",
       "description": "",
-      "cover": "works/new-project-mw2hjt58jed.png",
+      "cover": "works/menu-mwced9wa69y.png",
       "images": [
-        "works/new-project-mw2hjt58jed.png"
+        "works/menu-mwced9wa69y.png"
       ]
     },
     {
